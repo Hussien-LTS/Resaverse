@@ -1,0 +1,24 @@
+@startuml Filteration
+
+actor User as User
+participant Web_App as Web_App
+database Database as DB
+
+Web_App -> DB: Ask for all Aminities
+
+DB --> Web_App: Return all Aminities
+
+Web_App --> User: Show all Aminities
+note Left
+  Show all Amenities
+  as check list.
+end note
+User -> Web_App: asks for rooms with specific Aminities
+
+Web_App -> DB: Require Rooms with selected Amenities
+DB --> Web_App: Return Rooms with selected Amenities
+
+Web_App --> User: Show all rooms with selected Aminities
+
+
+@enduml
