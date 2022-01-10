@@ -3,21 +3,21 @@ actor Staff as Staff
 participant Web_App as Web_App
 database Database as DB
 
-' Staff -> Web_App: Ask for all rooms
+Staff -> Web_App: Visit the home page
 
-Web_App -> DB: Require all rooms
-note Left
-  When the staff user
-  open the web app.
-end note
+Web_App -> DB: Query all rooms
+' note Left
+'   When the staff user
+'   open the web app.
+' end note
 
 DB --> Web_App: Return all saved rooms
 Web_App --> Staff: Show all rooms
 
 
 
-Staff -> Web_App: Ask for a specific room's details
-Web_App -> DB: Require specific room's details
+Staff -> Web_App: Click on a specific room
+Web_App -> DB: Query a specific room's details
 
 DB --> Web_App: Return specific room's details
 Web_App --> Staff: Show room's details
@@ -30,17 +30,17 @@ actor Coordinator as Coordinator
 participant Web_App as Web_App
 database Database as DB
 
-' Coordinator -> Web_App: Ask for all rooms
-Web_App -> DB: Require all rooms
-note Left
-  When the staff user
-  open the web app.
-end note
+Coordinator -> Web_App: Visit the home page
+Web_App -> DB: Query all rooms
+' note Left
+'   When the staff user
+'   open the web app.
+' end note
 DB --> Web_App: Return all saved rooms
 Web_App --> Coordinator: Show all rooms
 
 
-Coordinator -> Web_App: Ask for a specific room's details
+Coordinator -> Web_App: Click on specific room
 note Left
   Details Include Room:
     number
@@ -50,13 +50,13 @@ note Left
     and most importantly
     Amenities
 end note
-Web_App -> DB: Require specific room's details
+Web_App -> DB: Query a specific room's details
 
-DB --> Web_App: Return specific room's details
+DB --> Web_App: Return a specific room's details
 Web_App --> Coordinator: Show room's details
 
 
-Coordinator -> Web_App: Add new room
+Coordinator -> Web_App: Click on add new room
 note left
   by filling a form 
   with the room details 
@@ -67,7 +67,7 @@ DB --> Web_App: Return added room
 Web_App --> Coordinator: Show added room
 
 
-Coordinator -> Web_App: Update a specific room's details
+Coordinator -> Web_App: Click on update a specific room's details
 note left
   Change Details
   +
@@ -83,8 +83,8 @@ DB --> Web_App: return room's details.
 Web_App --> Coordinator: Show updated details
 
 
-Coordinator -> Web_App: Delete a specific room's details
-Web_App -> DB: Delete a specific room's details
+Coordinator -> Web_App: Click on delete a specific room
+Web_App -> DB: Delete a specific room
 
 Web_App --> Coordinator: Show accept message if NO errors
 
