@@ -1,4 +1,4 @@
-@startuml Staff Reservation
+@startuml Staff Reservations
 actor Staff as Staff
 participant Web_App as Web_App
 database Database as DB
