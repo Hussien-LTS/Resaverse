@@ -11,13 +11,12 @@ namespace CoreModels.Models
         public int FloorId { get; set; }
         public int RoomTypeId{ get; set; }
 
-
         public string RoomCode { get; set; }
         public bool Availability { get; set; }
 
-        public string Capacity { get; set; }
+        public int Capacity { get; set; }
         #nullable enable
-        public string? Cordonation { get; set; }
+        public string? Coordonation { get; set; }
         public string? Canvas { get; set; }
         #nullable disable
 

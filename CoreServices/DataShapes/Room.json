@@ -1,0 +1,44 @@
+{
+  "Id": 1,
+  "RoomCode": "08",
+  "Availability": true,
+  "Capacity": 30,
+  "Coordonation": "30x90",
+  "Canvas": "30x90",
+  "Floor": {
+    "Id": 1,
+    "FloorCode": "F3"
+  },
+  "RoomType": {
+    "Id": 1,
+    "Type": "ClassRoom"
+  },
+  "Amenities": [
+    {
+      "Id": 1,
+      "Name": "Tv"
+    },
+    {
+      "Id": 2,
+      "Name": "3D Printer"
+    }
+  ],
+  //new Reservation DTO
+  "Reservations": [
+    {
+      "Reason": "Interview",
+      "ReservationStartDate": "DatatimeObject",
+      "ReservationEndDate": "DatatimeObject",
+      "ReservationStatus": "PENDING",
+      "User": {
+        "Id": "UUID",
+        "UserName": "Zara",
+        "ProfileImage": "jnqrei",
+        "Email": "admin@admin.com",
+        "PhoneNumber": "96289456197"
+      }
+    },
+    {},
+    {}
+  ]
+}

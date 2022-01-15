@@ -1,0 +1,17 @@
+{
+  "Reason": "Interview",
+  "ReservationStartDate": "DatatimeObject",
+  "ReservationEndDate": "DatatimeObject",
+  "ReservationStatus": "PENDING",
+  "User": {
+    "Id": "UUID",
+    "UserName": "Zara",
+    "ProfileImage": "jnqrei",
+    "Email": "admin@admin.com",
+    "PhoneNumber": "96289456197"
+  },
+  "Room": {
+    "Id": 1,
+    "RoomCode": "08"
+  }
+}

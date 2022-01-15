@@ -8,6 +8,6 @@ namespace CoreModels.Models
 {
     public class ApplicationUser : IdentityUser
     {
-
+        public string Avatar { get; set; }
     }
 }

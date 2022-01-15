@@ -1,0 +1,15 @@
+{
+  "Id": 1,
+  "AmenityName": "Tv",
+  "Rooms": [
+    {
+      "RoomId": 1,
+      "RoomCode": "08",
+      "FloorId": 1,
+      "FloorCode": "F3",
+      "Availability": true
+    },
+    {},
+    {}
+  ]
+}
