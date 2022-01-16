@@ -6,12 +6,15 @@
   "User": {
     "Id": "UUID",
     "UserName": "Zara",
-    "ProfileImage": "jnqrei",
+    "Avatar": "jnqrei",
     "Email": "admin@admin.com",
     "PhoneNumber": "96289456197"
   },
   "Room": {
-    "Id": 1,
-    "RoomCode": "08"
+    "RoomId": 1,
+    "RoomCode": "08",
+    "FloorId": 1,
+    "FloorCode": "F3",
+    "Availability": true
   }
 }

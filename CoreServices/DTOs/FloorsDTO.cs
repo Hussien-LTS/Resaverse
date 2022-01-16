@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 
 namespace CoreServices.DTOs
 {
-    public class RoomTypeDTO
+    public class FloorsDTO
     {
         public int Id { get; set; }
-        public string Type { get; set; }
-        public virtual List<AminitiesRoomsDTO> Rooms { get; set; }
-
+        public string FloorCode { get; set; }
     }
 }

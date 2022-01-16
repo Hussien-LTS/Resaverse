@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CoreServices.DTOs
 {
-    public class RoomDTO
+    public class RoomsDTO
     {
         public int Id { get; set; }
         public string RoomCode { get; set; }
@@ -13,11 +13,7 @@ namespace CoreServices.DTOs
         public int Capacity { get; set; }
         public string Coordonation { get; set; }
         public string Canvas { get; set; }
-        public virtual FloorsDTO Floor { get; set; }
-        public virtual RoomTypesDTO RoomType { get; set; }
-        public virtual List<AminitiesDTO> Amenities { get; set; }
-        public virtual List<ReservationsDTO> Reservations { get; set; }
-
-
+        public RoomTypesDTO RoomType { get; set; }
+        public List<AminitiesDTO> Amenities { get; set; }
     }
 }

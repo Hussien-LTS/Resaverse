@@ -4,7 +4,11 @@
     "Type": "ClassRoom",
     "Rooms": [
       {
-        "Id": 1
+        "RoomId": 1,
+        "RoomCode": "08",
+        "FloorId": 1,
+        "FloorCode": "F3",
+        "Availability": true
       },
       {},
       {}
