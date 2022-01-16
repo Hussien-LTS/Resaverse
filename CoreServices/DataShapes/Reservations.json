@@ -1,0 +1,21 @@
+{
+  //Using Room ID
+  "count": 3,
+  "results": [
+    {
+      "Reason": "Interview",
+      "ReservationStartDate": "DatatimeObject",
+      "ReservationEndDate": "DatatimeObject",
+      "ReservationStatus": "PENDING",
+      "User": {
+        "Id": "UUID",
+        "UserName": "Zara",
+        "ProfileImage": "jnqrei",
+        "Email": "admin@admin.com",
+        "PhoneNumber": "96289456197"
+      }
+    },
+    {},
+    {}
+  ]
+}

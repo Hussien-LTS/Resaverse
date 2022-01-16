@@ -42,6 +42,9 @@ namespace CoreModels.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -109,13 +112,10 @@ namespace CoreModels.Migrations
                     b.Property<string>("Canvas")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CoOrdination")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FloorCode")
+                    b.Property<string>("Coordination")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FloorSize")
+                    b.Property<string>("FloorCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -163,10 +163,10 @@ namespace CoreModels.Migrations
                     b.Property<string>("Canvas")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Capacity")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Cordonation")
+                    b.Property<string>("Coordonation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FloorId")

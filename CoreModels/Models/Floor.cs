@@ -10,11 +10,10 @@ namespace CoreModels.Models
     {
         public int Id { get; set; }
         public string FloorCode { get; set; }
-        public int CoOrdination { get; set; }
+        public string Coordination { get; set; }
 
         #nullable enable
         public string? Canvas { get; set; }
-        public string? FloorSize { get; set; }
 
         #nullable disable
         public virtual List<Room> Rooms { get; set; }
