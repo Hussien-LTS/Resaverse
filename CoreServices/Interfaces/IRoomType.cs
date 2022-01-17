@@ -1,18 +1,16 @@
-﻿using CoreModels.Models;
-using System;
+﻿using CoreServices.DTOs;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreServices.Interfaces
 {
     public interface IRoomType
     {
-        //RoomType Create(RoomType RoomType);
-        //List<RoomType> GetRoomTypes();
-        //RoomType GetRoomsByType(int id);
-        //RoomType UpdateRoomType(int id, RoomType RoomType);
-        //Task Delete(int id);
+        List<RoomTypesDTO> GetRoomTypes();
+        RoomTypeDTO GetRoomsByType(int id);
+        RoomTypesDTO Create(RoomTypesDTO RoomType);
+        RoomTypesDTO UpdateRoomType(int id, RoomTypesDTO RoomType);
+        Task Delete(int id);
 
     }
 }

@@ -1,4 +1,4 @@
-﻿using CoreModels.Models;
+﻿using CoreServices.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,11 +6,11 @@ namespace CoreServices.Interfaces
 {
     public interface IAmenity
     {
-        //Amenity Create(Amenity amenity);
-        //List<Amenity> GetAmenites();
-        //Amenity GetAmenity(int id);
-        //Amenity UpdateAmenity(int id, Amenity amenity);
-        //Task Delete(int id);
+        List<AmenitiesDTO> GetAmenites();
+        AmenityDTO GetAmenityDTO(int id);
+        AmenityDTO Create(AmenityDTO Amenity);
+        AmenityDTO UpdateAmenityDTO(int id, AmenityDTO amenity);
+        Task Delete(int id);
 
     }
 }

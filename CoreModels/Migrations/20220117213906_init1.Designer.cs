@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreModels.Migrations
 {
     [DbContext(typeof(ResaverseDbContext))]
-    [Migration("20220116212112_UpdateUserModel")]
-    partial class UpdateUserModel
+    [Migration("20220117213906_init1")]
+    partial class init1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
