@@ -14,6 +14,6 @@ namespace CoreServices.DTOs
         public string Coordonation { get; set; }
         public string Canvas { get; set; }
         public RoomTypesDTO RoomType { get; set; }
-        public List<AminitiesDTO> Amenities { get; set; }
+        public List<AmenitiesDTO> Amenities { get; set; }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CoreServices.DTOs
 {
@@ -12,7 +9,5 @@ namespace CoreServices.DTOs
         public int Count { get; set; }
 
         public virtual List<RoomsDTO> Result { get; set; }
-
-
     }
 }

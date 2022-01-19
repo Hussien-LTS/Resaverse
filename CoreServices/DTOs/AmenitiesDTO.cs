@@ -1,8 +1,8 @@
 ﻿namespace CoreServices.DTOs
 {
-    public class FloorsDTO
+    public class AmenitiesDTO
     {
         public int Id { get; set; }
-        public string FloorCode { get; set; }
+        public string AmenityName { get; set; }
     }
 }

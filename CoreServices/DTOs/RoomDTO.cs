@@ -15,7 +15,7 @@ namespace CoreServices.DTOs
         public string Canvas { get; set; }
         public virtual FloorsDTO Floor { get; set; }
         public virtual RoomTypesDTO RoomType { get; set; }
-        public virtual List<AminitiesDTO> Amenities { get; set; }
+        public virtual List<AmenitiesDTO> Amenities { get; set; }
         public virtual List<ReservationsDTO> Reservations { get; set; }
 
 
