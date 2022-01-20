@@ -21,6 +21,7 @@ namespace CoreServices
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddTransient<IAmenity, AmenityService>();
             services.AddTransient<IFloor, FloorService>();

@@ -6,10 +6,10 @@ namespace CoreServices.Interfaces
 {
     public interface IFloor
     {
-        List<FloorsDTO> GetFloors();
-        FloorDTO GetFloor(int id);
-        FloorDTO Create(FloorDTO floor);
-        FloorDTO UpdateFloor(int id, FloorDTO floor);
+        Task<List<FloorsDTO>> GetFloors();
+        Task<FloorDTO> GetFloor(int id);
+        Task<FloorDTO> Create(FloorDTO floor);
+        Task<FloorDTO> UpdateFloorAsync(int id, FloorDTO floor);
         Task Delete(int id);
     }
 }

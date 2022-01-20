@@ -23,5 +23,7 @@ namespace CoreModels.Models
         public virtual Floor Floor { get; set; }
         public virtual RoomType RoomType { get; set; }
         public virtual List<RoomAmenity> RoomAmenities{ get; set; }
+        public virtual List<Reservation> Reservations { get; set; }
+
     }
 }
