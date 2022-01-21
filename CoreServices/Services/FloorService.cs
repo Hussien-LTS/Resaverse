@@ -5,6 +5,7 @@ using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreServices.Services
@@ -62,12 +63,19 @@ namespace CoreServices.Services
             return result;
         }
 
-        public async Task<List<FloorsDTO>> GetFloors()
+        public async Task<JSONRes<FloorsDTO>> GetFloors()
         {
-            var Floors = await _dbContext.Floors
-                                          .Include(r => r.Rooms)
-                                          .ToListAsync();
-            var results = _mapper.Map<List<FloorsDTO>>(Floors);
+            var floors = await _dbContext.Floors
+                .Select(a => new FloorsDTO
+                {
+                    Id = a.Id,
+                    FloorCode = a.FloorCode
+                }).ToListAsync();
+            var results = new JSONRes<FloorsDTO>
+            {
+                Count = floors.Count(),
+                Results = floors
+            };
 
             return results;
             //throw new NotImplementedException();

@@ -1,6 +1,9 @@
-﻿using CoreModels.Models;
+﻿using AutoMapper;
+using CoreModels.Data;
+using CoreModels.Models;
 using CoreServices.DTOs;
 using CoreServices.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,34 +13,98 @@ namespace CoreServices.Services
 {
     public class ReservationService : IReservation
     {
-        public ReservationDTO Create(ReservationDTO reservation)
+        private readonly ResaverseDbContext _dbContext;
+        private readonly IMapper _mapper;
+
+        public ReservationService(ResaverseDbContext dbContext, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
+            _mapper = mapper;
+        }
+        public async Task<ReservationDTO> Create(ReservationDTO reservation)
+        {
+            _dbContext.Entry(reservation).State = EntityState.Added;
+            await _dbContext.SaveChangesAsync();
+            return reservation;
         }
 
-        public Task Delete(int roomId, DateTime startTime)
+        public async Task Delete(int roomId, DateTime startTime)
         {
-            throw new NotImplementedException();
+            var reservation = _dbContext.Reservations
+                .Where(e => e.RoomId == roomId && e.ReservationStartDate == startTime);
+            _dbContext.Entry(reservation).State = EntityState.Deleted;
+            await _dbContext.SaveChangesAsync();
         }
 
         public ReservationDTO GetReservation(int roomId, DateTime startTime)
         {
-            throw new NotImplementedException();
+            var reservation = _dbContext.Reservations
+                .Where(e => e.RoomId == roomId && e.ReservationStartDate == startTime)
+                .Include(e => e.User)
+                .Include(e => e.Room);
+            var result = _mapper.Map<ReservationDTO>(reservation);
+            return result;
         }
 
-        public List<ReservationsDTO> GetReservations()
+        public async Task<JSONRes<ReservationsDTO>> GetReservations()
         {
-            throw new NotImplementedException();
+            var reservations = await _dbContext.Reservations
+                .Select(e => new ReservationsDTO {
+                    Reason = e.Reason,
+                    ReservationStartDate = e.ReservationStartDate,
+                    ReservationEndDate = e.ReservationEndDate,
+                    ReservationStatus = e.ReservationStatus,
+                    User = new UserDTO {
+                        Id = e.User.Id,
+                        Avatar = e.User.Avatar,
+                        Email = e.User.Email,
+                        FirstName = e.User.FirstName,
+                        LastName = e.User.LastName,
+                        UserName = e.User.UserName,
+                        PhoneNumber = e.User.PhoneNumber,
+                    },
+                }).ToListAsync();
+
+            var result = new JSONRes<ReservationsDTO>
+            {
+                Count = reservations.Count(),
+                Results = reservations,
+            };
+
+            return result;
         }
 
-        public List<ReservationsDTO> GetReservationsForUser(int userId)
+        public async Task<JSONRes<ReservationsByUserDTO>> GetReservationsForUser(string userId)
         {
-            throw new NotImplementedException();
+            var reservations = await _dbContext.Reservations
+                .Where(e => e.UserId == userId)
+                .Select(e => new ReservationsByUserDTO
+                {
+                    Reason = e.Reason,
+                    ReservationStartDate = e.ReservationStartDate,
+                    ReservationEndDate = e.ReservationEndDate,
+                    ReservationStatus = e.ReservationStatus,
+                }).ToListAsync();
+
+            var result = new JSONRes<ReservationsByUserDTO>
+            {
+                Count = reservations.Count(),
+                Results = reservations,
+            };
+
+            return result;
         }
 
-        public ReservationDTO UpdateReservation(int roomId, DateTime startTime, Reservation reservation)
+        public async Task<ReservationDTO> UpdateReservation(int roomId, DateTime startTime, ReservationDTO reservation)
         {
-            throw new NotImplementedException();
+            //var _reservation = await _dbContext.Reservations
+            //    .Where(e => e.RoomId == roomId && e.ReservationStartDate == startTime)
+            //    .FirstOrDefaultAsync();
+            
+            _dbContext.Entry(reservation).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+            return reservation;
+
         }
     }
 }

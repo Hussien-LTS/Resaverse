@@ -1,16 +1,15 @@
 ﻿using CoreServices.DTOs;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CoreServices.Interfaces
 {
     public interface IAmenity
     {
-        List<AmenitiesDTO> GetAmenites();
-        AmenityDTO GetAmenityDTO(int id);
-        AmenityDTO Create(AmenityDTO Amenity);
-        AmenityDTO UpdateAmenityDTO(int id, AmenityDTO amenity);
+        Task<AmenityDTO> Create(AmenityDTO amenity);
         Task Delete(int id);
+        Task<JSONRes<AmenitiesDTO>> GetAmenites();
+        Task<AmenityDTO> GetAmenityDTO(int id);
+        Task<AmenityDTO> UpdateAmenityDTO(int id, AmenityDTO amenity);
 
     }
 }

@@ -1,18 +1,17 @@
-﻿using CoreModels.Models;
-using CoreServices.DTOs;
+﻿using CoreServices.DTOs;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CoreServices.Interfaces
 {
     public interface IReservation
     {
-        ReservationDTO Create(ReservationDTO reservation);
-        List<ReservationsDTO> GetReservations();
-        List<ReservationsDTO> GetReservationsForUser(int userId);
-        ReservationDTO GetReservation(int roomId, DateTime startTime);
-        ReservationDTO UpdateReservation(int roomId, DateTime startTime, Reservation reservation);
+        Task<ReservationDTO> Create(ReservationDTO reservation);
         Task Delete(int roomId, DateTime startTime);
+        ReservationDTO GetReservation(int roomId, DateTime startTime);
+        Task<JSONRes<ReservationsDTO>> GetReservations();
+        Task<JSONRes<ReservationsByUserDTO>> GetReservationsForUser(string userId);
+        Task<ReservationDTO> UpdateReservation(int roomId, DateTime startTime, ReservationDTO reservation);
+
     }
 }
