@@ -1,5 +1,8 @@
-﻿using CoreServices.DTOs;
+﻿using AutoMapper;
+using CoreModels.Data;
+using CoreServices.DTOs;
 using CoreServices.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,19 +12,43 @@ namespace CoreServices.Services
 {
     public class RoomAmenityService : IRoomAmenity
     {
-        public RoomAmenityDTO AddAmenity(int roomId, int AmenityId)
+        private readonly ResaverseDbContext _dbContext;
+
+        public RoomAmenityService(ResaverseDbContext dbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
+        }
+        public async Task<RoomAmenityDTO> AddAmenity(int roomId, int amenityId)
+        {
+            var roomAmenity = new RoomAmenityDTO()
+            {
+                RoomId = roomId,
+                AmenityId = amenityId
+            };
+
+            _dbContext.Entry(roomAmenity).State = EntityState.Added;
+            await _dbContext.SaveChangesAsync();
+
+            await _dbContext.RoomAmenities
+                .Include(x => x.Room)
+                .FirstOrDefaultAsync(x => x.RoomId == roomId);
+
+            await _dbContext.RoomAmenities
+                .Include(x => x.Amenity)
+                .FirstOrDefaultAsync(x => x.AmenityId == amenityId);
+
+
+            return roomAmenity;
         }
 
-        public List<RoomAmenityDTO> GetRoomAmenities(int roomId)
+        public async Task RemoveAmenity(int roomId, int amenityId)
         {
-            throw new NotImplementedException();
-        }
+            var roomAmenity = await _dbContext.RoomAmenities
+                .FirstOrDefaultAsync(x => (x.RoomId == roomId) && (x.AmenityId == amenityId));
 
-        public Task RemoveAmenity(int roomId, int AmenityId)
-        {
-            throw new NotImplementedException();
+            _dbContext.Entry(roomAmenity).State = EntityState.Deleted;
+            await _dbContext.SaveChangesAsync();
+
         }
     }
 }

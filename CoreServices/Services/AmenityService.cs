@@ -1,5 +1,8 @@
-﻿using CoreServices.DTOs;
+﻿using AutoMapper;
+using CoreModels.Data;
+using CoreServices.DTOs;
 using CoreServices.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,29 +12,63 @@ namespace CoreServices.Services
 {
     public class AmenityService : IAmenity
     {
-        public AmenityDTO Create(AmenityDTO Amenity)
+        private readonly ResaverseDbContext _dbContext;
+        private readonly IMapper _mapper;
+
+        public AmenityService(ResaverseDbContext dbContext, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
+            _mapper = mapper;
+
+        }
+        public async Task<AmenityDTO> Create(AmenityDTO amenity)
+        {
+            _dbContext.Entry(amenity).State = EntityState.Added;
+
+            await _dbContext.SaveChangesAsync();
+
+            return amenity;
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var deletedAmenity = await _dbContext.Amenities.FindAsync(id);
+            _dbContext.Entry(deletedAmenity).State = EntityState.Deleted;
+
+            await _dbContext.SaveChangesAsync();
+
         }
 
-        public List<AmenitiesDTO> GetAmenites()
+        public async Task<JSONRes<AmenitiesDTO>> GetAmenites()
         {
-            throw new NotImplementedException();
+            var list = await _dbContext.Amenities.Select(e => new AmenitiesDTO {
+                Id = e.Id,
+                AmenityName = e.AmenityName,
+            }).ToListAsync();
+
+            var ameniteis = new JSONRes<AmenitiesDTO>
+            {
+                Count = list.Count(),
+                Results = list,
+            };
+            return ameniteis;
         }
 
-        public AmenityDTO GetAmenityDTO(int id)
+        public async Task<AmenityDTO> GetAmenityDTO(int id)
         {
-            throw new NotImplementedException();
+            var amenity = await _dbContext.Amenities
+                .Include(e => e.RoomAmenities)
+                .FirstOrDefaultAsync(e => e.Id == id);
+            var result = _mapper.Map<AmenityDTO>(amenity);
+
+            return result;
         }
 
-        public AmenityDTO UpdateAmenityDTO(int id, AmenityDTO amenity)
+        public async Task<AmenityDTO> UpdateAmenityDTO(int id, AmenityDTO amenity)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(amenity).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+            return amenity;
         }
     }
 }

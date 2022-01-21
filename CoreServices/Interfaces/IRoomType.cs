@@ -1,16 +1,15 @@
 ﻿using CoreServices.DTOs;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CoreServices.Interfaces
 {
     public interface IRoomType
     {
-        List<RoomTypesDTO> GetRoomTypes();
-        RoomTypeDTO GetRoomsByType(int id);
-        RoomTypesDTO Create(RoomTypesDTO RoomType);
-        RoomTypesDTO UpdateRoomType(int id, RoomTypesDTO RoomType);
+        Task<RoomTypesDTO> Create(RoomTypesDTO roomType);
         Task Delete(int id);
+        Task<RoomTypeDTO> GetRoomsByType(int id);
+        Task<JSONRes<RoomTypesDTO>> GetRoomTypes();
+        Task<RoomTypesDTO> UpdateRoomType(int id, RoomTypesDTO roomType);
 
     }
 }

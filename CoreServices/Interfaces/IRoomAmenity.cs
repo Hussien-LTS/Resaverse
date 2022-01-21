@@ -6,9 +6,8 @@ namespace CoreServices.Interfaces
 {
     public interface IRoomAmenity
     {
-        RoomAmenityDTO AddAmenity(int roomId, int AmenityId);
-        List<RoomAmenityDTO> GetRoomAmenities(int roomId);
-        Task RemoveAmenity(int roomId, int AmenityId);
+        Task<RoomAmenityDTO> AddAmenity(int roomId, int amenityId);
+        Task RemoveAmenity(int roomId, int amenityId);
 
     }
 }

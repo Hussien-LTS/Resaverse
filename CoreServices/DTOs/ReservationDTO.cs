@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreModels.Models;
+using System;
 
 namespace CoreServices.DTOs
 {
@@ -8,10 +9,11 @@ namespace CoreServices.DTOs
         public DateTime ReservationStartDate { get; set; }
         public DateTime ReservationEndDate { get; set; }
         // change to enum???
-        public string ReservationStatus { get; set; }
+        public ReservationStatus ReservationStatus { get; set; }
         public virtual UserDTO User { get; set; }
         public virtual AminitiesRoomsDTO Room { get; set; }
 
 
     }
+
 }

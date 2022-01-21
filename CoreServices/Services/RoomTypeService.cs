@@ -1,5 +1,8 @@
-﻿using CoreServices.DTOs;
+﻿using AutoMapper;
+using CoreModels.Data;
+using CoreServices.DTOs;
 using CoreServices.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,29 +12,62 @@ namespace CoreServices.Services
 {
     public class RoomTypeService : IRoomType
     {
-        public RoomTypesDTO Create(RoomTypesDTO RoomType)
+        private readonly ResaverseDbContext _dbContext;
+        private readonly IMapper _mapper;
+
+        public RoomTypeService(ResaverseDbContext dbContext, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
+            _mapper = mapper;
+
+        }
+        public async Task<RoomTypesDTO> Create(RoomTypesDTO roomType)
+        {
+            _dbContext.Entry(roomType).State = EntityState.Added;
+            await _dbContext.SaveChangesAsync();
+            return roomType;
+
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var deleted = await _dbContext.RoomTypes.FindAsync(id);
+            _dbContext.Entry(deleted).State = EntityState.Deleted;
+            await _dbContext.SaveChangesAsync();
         }
 
-        public RoomTypeDTO GetRoomsByType(int id)
+        public async Task<RoomTypeDTO> GetRoomsByType(int id)
         {
-            throw new NotImplementedException();
+            var roomTypes = await _dbContext.RoomTypes
+                .Include(e => e.Rooms)
+                .FirstOrDefaultAsync(e => e.Id == id);
+            var result = _mapper.Map<RoomTypeDTO>(roomTypes);
+            return result;
         }
 
-        public List<RoomTypesDTO> GetRoomTypes()
+        public async Task<JSONRes<RoomTypesDTO>> GetRoomTypes()
         {
-            throw new NotImplementedException();
+            var roomTypes = await _dbContext.RoomTypes
+                .Select(e => new RoomTypesDTO
+                {
+                    Id = e.Id,
+                    Type = e.Type,
+                }).ToListAsync();
+
+            var result = new JSONRes<RoomTypesDTO>
+            {
+                Count = roomTypes.Count(),
+                Results = roomTypes,
+            };
+
+            return result;
         }
 
-        public RoomTypesDTO UpdateRoomType(int id, RoomTypesDTO RoomType)
+        public async Task<RoomTypesDTO> UpdateRoomType(int id, RoomTypesDTO roomType)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(roomType).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+            return roomType;
         }
     }
 }
