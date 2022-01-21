@@ -6,7 +6,7 @@ namespace CoreServices.Interfaces
 {
     public interface IFloor
     {
-        Task<List<FloorsDTO>> GetFloors();
+        Task<JSONRes<FloorsDTO>> GetFloors();
         Task<FloorDTO> GetFloor(int id);
         Task<FloorDTO> Create(FloorDTO floor);
         Task<FloorDTO> UpdateFloorAsync(int id, FloorDTO floor);
