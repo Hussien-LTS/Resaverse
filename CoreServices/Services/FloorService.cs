@@ -14,12 +14,10 @@ namespace CoreServices.Services
     public class FloorService : IFloor
     {
         private readonly ResaverseDbContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public FloorService(ResaverseDbContext dbContext, IMapper mapper)
+        public FloorService(ResaverseDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
         public async Task<FloorDTO> Create(FloorDTO floor)
         {
@@ -40,27 +38,27 @@ namespace CoreServices.Services
 
         public async Task<FloorDTO> GetFloor(int id)
         {
-            //var floor = await _dbContext.Floors.Select(f => new FloorDTO
-            //{
-            //    Id = f.Id,
-            //    Canvas = f.Canvas,
-            //    Coordination = f.Coordination,
-            //    FloorCode = f.FloorCode,
-            //    Rooms = f.Rooms.Select(r=> new FloorsRoomsDTO
-            //    {
-            //        Id = r.Id,
-            //        Availability = r.Availability,
-            //        Canvas = r.Canvas,
-            //        Coordonation = r.Coordonation
+            var floor = await _dbContext.Floors
+                .Where(e => e.Id == id)
+                .Select(f => new FloorDTO
+            {
+                Id = f.Id,
+                Canvas = f.Canvas,
+                Coordination = f.Coordination,
+                FloorCode = f.FloorCode,
+                Rooms = f.Rooms
+                    .Select(r => new FloorsRoomsDTO
+                {
+                    Id = r.Id,
+                    Availability = r.Availability,
+                    Canvas = r.Canvas,
+                    Coordonation = r.Coordonation
 
-            //    }).ToList()
-            //}).FirstOrDefaultAsync(s => s.Id == id);
-            Floor floor = await _dbContext.Floors
-                                          .Include(r => r.Rooms)
-                                          .FirstOrDefaultAsync(f => f.Id == id);
-            var result = _mapper.Map<FloorDTO>(floor);
+                }).ToList()
+            }).FirstOrDefaultAsync();
 
-            return result;
+
+            return floor;
         }
 
         public async Task<JSONRes<FloorsDTO>> GetFloors()
@@ -78,7 +76,6 @@ namespace CoreServices.Services
             };
 
             return results;
-            //throw new NotImplementedException();
         }
 
         public async Task<FloorDTO> UpdateFloorAsync(int id, FloorDTO floor)

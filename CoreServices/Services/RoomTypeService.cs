@@ -13,12 +13,10 @@ namespace CoreServices.Services
     public class RoomTypeService : IRoomType
     {
         private readonly ResaverseDbContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public RoomTypeService(ResaverseDbContext dbContext, IMapper mapper)
+        public RoomTypeService(ResaverseDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
 
         }
         public async Task<RoomTypesDTO> Create(RoomTypesDTO roomType)
@@ -39,10 +37,23 @@ namespace CoreServices.Services
         public async Task<RoomTypeDTO> GetRoomsByType(int id)
         {
             var roomTypes = await _dbContext.RoomTypes
-                .Include(e => e.Rooms)
-                .FirstOrDefaultAsync(e => e.Id == id);
-            var result = _mapper.Map<RoomTypeDTO>(roomTypes);
-            return result;
+                .Where(e => e.Id == id)
+                .Select(e => new RoomTypeDTO {
+                    Id = e.Id,
+                    Type = e.Type,
+                    Rooms = e.Rooms.Select(e => new AminitiesRoomsDTO
+                    {
+                        RoomID = e.Id,
+                        FloorId = e.FloorId,
+                        FloorCode = e.Floor.FloorCode,
+                        RoomCode = e.RoomCode,
+                        Availability = e.Availability,
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync();
+            
+
+            return roomTypes;
         }
 
         public async Task<JSONRes<RoomTypesDTO>> GetRoomTypes()

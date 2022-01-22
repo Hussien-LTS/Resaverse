@@ -15,15 +15,24 @@ namespace APIControllres.Controllres
     {
         private readonly IFloor _floorService;
 
-        public FloorController( IFloor floor)
+        public FloorController(IFloor floor)
         {
             _floorService = floor;
         }
+
         [HttpGet]
         public async Task<ActionResult<JSONRes<FloorsDTO>>> GetFloors()
         {
             var results = await _floorService.GetFloors();
             return Ok(results);
+        }
+
+
+        [HttpGet("{floorId}")]
+        public async Task<ActionResult<FloorDTO>> GetFloor(int floorId)
+        {
+            var result = await _floorService.GetFloor(floorId);
+            return Ok(result);
         }
     }
 }
