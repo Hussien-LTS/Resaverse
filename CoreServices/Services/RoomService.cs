@@ -12,12 +12,10 @@ namespace CoreServices.Services
     public class RoomService : IRoom
     {
         private readonly ResaverseDbContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public RoomService(ResaverseDbContext dbContext, IMapper mapper)
+        public RoomService(ResaverseDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
         public async Task<RoomDTO> Create(RoomDTO room)
         {
@@ -37,14 +35,50 @@ namespace CoreServices.Services
         public async Task<RoomDTO> GetRoom(int id)
         {
             var room = await _dbContext.Rooms
-                                        .Include(f => f.Floor)
-                                        .Include(rt => rt.RoomType)
-                                        .Include(ra => ra.RoomAmenities).ThenInclude(a => a.Amenity)
-                                        .Include(r => r.Reservations)
-                                        .FirstOrDefaultAsync(r => r.Id == id);
-            var result = _mapper.Map<RoomDTO>(room);
+                .Where(r => r.Id == id)
+                .Select(a => new RoomDTO
+                {
+                    Id = a.Id,
+                    Availability = a.Availability,
+                    Canvas = a.Canvas,
+                    Capacity = a.Capacity,
+                    Coordonation = a.Coordonation,
+                    RoomCode = a.RoomCode,
+                    Amenities = a.RoomAmenities.Select(a => new AmenitiesDTO
+                    {
+                        Id = a.AmenityId,
+                        AmenityName = a.Amenity.AmenityName
+                    }).ToList(),
+                    RoomType = new RoomTypesDTO
+                    {
+                        Id = a.RoomType.Id,
+                        Type = a.RoomType.Type
+                    },
+                    Floor = new FloorsDTO
+                    {
+                        Id = a.Floor.Id,
+                        FloorCode = a.Floor.FloorCode,
+                    },
+                    Reservations = a.Reservations.Select(e => new ReservationsDTO
+                    {
+                        Reason = e.Reason,
+                        ReservationEndDate = e.ReservationEndDate,
+                        ReservationStartDate = e.ReservationStartDate,
+                        ReservationStatus = e.ReservationStatus,
+                        User = new UserDTO
+                        {
+                            Avatar = e.User.Avatar,
+                            Email = e.User.Email,
+                            FirstName = e.User.FirstName,
+                            Id = e.User.Id,
+                            LastName = e.User.LastName,
+                            PhoneNumber = e.User.PhoneNumber,
+                            UserName = e.User.UserName,
+                        }
+                    }).ToList()
+                }).FirstOrDefaultAsync();
 
-            return result;
+            return room;
 
         }
 

@@ -13,12 +13,10 @@ namespace CoreServices.Services
     public class AmenityService : IAmenity
     {
         private readonly ResaverseDbContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public AmenityService(ResaverseDbContext dbContext, IMapper mapper)
+        public AmenityService(ResaverseDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
 
         }
         public async Task<AmenityDTO> Create(AmenityDTO amenity)
@@ -57,11 +55,23 @@ namespace CoreServices.Services
         public async Task<AmenityDTO> GetAmenityDTO(int id)
         {
             var amenity = await _dbContext.Amenities
-                .Include(e => e.RoomAmenities)
-                .FirstOrDefaultAsync(e => e.Id == id);
-            var result = _mapper.Map<AmenityDTO>(amenity);
+                .Where(e => e.Id == id)
+                .Select(e => new AmenityDTO
+                {
+                    Id = e.Id,
+                    AmenityName = e.AmenityName,
+                    Rooms = e.RoomAmenities
+                        .Select(e => new AminitiesRoomsDTO
+                        {
+                            RoomID = e.Room.Id,
+                            FloorId = e.Room.FloorId,
+                            FloorCode = e.Room.Floor.FloorCode,
+                            RoomCode = e.Room.RoomCode,
+                            Availability = e.Room.Availability,
+                        }).ToList()
+                }).FirstOrDefaultAsync();
 
-            return result;
+            return amenity;
         }
 
         public async Task<AmenityDTO> UpdateAmenityDTO(int id, AmenityDTO amenity)

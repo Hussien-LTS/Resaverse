@@ -14,12 +14,10 @@ namespace CoreServices.Services
     public class ReservationService : IReservation
     {
         private readonly ResaverseDbContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public ReservationService(ResaverseDbContext dbContext, IMapper mapper)
+        public ReservationService(ResaverseDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
         public async Task<ReservationDTO> Create(ReservationDTO reservation)
         {
@@ -36,14 +34,37 @@ namespace CoreServices.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public ReservationDTO GetReservation(int roomId, DateTime startTime)
+        public Task<ReservationDTO> GetReservation(int roomId, DateTime startTime)
         {
             var reservation = _dbContext.Reservations
                 .Where(e => e.RoomId == roomId && e.ReservationStartDate == startTime)
-                .Include(e => e.User)
-                .Include(e => e.Room);
-            var result = _mapper.Map<ReservationDTO>(reservation);
-            return result;
+                .Select(e => new ReservationDTO
+                {
+                    Reason = e.Reason,
+                    ReservationStartDate = e.ReservationStartDate,
+                    ReservationEndDate = e.ReservationEndDate,
+                    ReservationStatus = e.ReservationStatus,
+                    Room = new AminitiesRoomsDTO
+                    {
+                        RoomID = e.RoomId,
+                        RoomCode = e.Room.RoomCode,
+                        FloorId = e.Room.FloorId,
+                        FloorCode = e.Room.Floor.FloorCode,
+                        Availability = e.Room.Availability,
+                    },
+                    User = new UserDTO
+                    {
+                        Avatar = e.User.Avatar,
+                        Email = e.User.Email,
+                        FirstName = e.User.FirstName,
+                        Id = e.User.Id,
+                        LastName = e.User.LastName,
+                        PhoneNumber = e.User.PhoneNumber,
+                        UserName = e.User.UserName,
+                    }
+                }).FirstOrDefaultAsync();
+                
+            return reservation;
         }
 
         public async Task<JSONRes<ReservationsDTO>> GetReservations()
