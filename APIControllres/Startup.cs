@@ -45,7 +45,10 @@ namespace APIControllres
             services.AddTransient<IRoomAmenity, RoomAmenityService>();
             services.AddTransient<IRoomType, RoomTypeService>();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+             );
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo()

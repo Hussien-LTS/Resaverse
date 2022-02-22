@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CoreModels.Data;
+using CoreModels.Models;
 using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -19,22 +20,19 @@ namespace CoreServices.Services
             _dbContext = dbContext;
 
         }
+
         public async Task<AmenityDTO> Create(AmenityDTO amenity)
         {
-            _dbContext.Entry(amenity).State = EntityState.Added;
+            var amenityInstance = new Amenity
+            {
+                AmenityName = amenity.AmenityName
+            };
+            _dbContext.Entry(amenityInstance).State = EntityState.Added;
 
             await _dbContext.SaveChangesAsync();
+            amenity.Id = amenityInstance.Id;
 
             return amenity;
-        }
-
-        public async Task Delete(int id)
-        {
-            var deletedAmenity = await _dbContext.Amenities.FindAsync(id);
-            _dbContext.Entry(deletedAmenity).State = EntityState.Deleted;
-
-            await _dbContext.SaveChangesAsync();
-
         }
 
         public async Task<JSONRes<AmenitiesDTO>> GetAmenites()
@@ -52,7 +50,7 @@ namespace CoreServices.Services
             return ameniteis;
         }
 
-        public async Task<AmenityDTO> GetAmenityDTO(int id)
+        public async Task<AmenityDTO> GetAmenity(int id)
         {
             var amenity = await _dbContext.Amenities
                 .Where(e => e.Id == id)
@@ -74,11 +72,26 @@ namespace CoreServices.Services
             return amenity;
         }
 
-        public async Task<AmenityDTO> UpdateAmenityDTO(int id, AmenityDTO amenity)
+        public async Task<AmenityDTO> UpdateAmenity(int id, AmenityDTO amenity)
         {
-            _dbContext.Entry(amenity).State = EntityState.Modified;
+            var updatedAmenityInstance = new Amenity
+            {
+                Id = id,
+                AmenityName = amenity.AmenityName
+            };
+            _dbContext.Entry(updatedAmenityInstance).State = EntityState.Modified;
+
             await _dbContext.SaveChangesAsync();
+
             return amenity;
+        }
+        public async Task Delete(int id)
+        {
+            var deletedAmenity = await _dbContext.Amenities.FindAsync(id);
+            _dbContext.Entry(deletedAmenity).State = EntityState.Deleted;
+
+            await _dbContext.SaveChangesAsync();
+
         }
     }
 }

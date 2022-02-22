@@ -1,11 +1,9 @@
-﻿using AutoMapper;
-using CoreModels.Data;
+﻿using CoreModels.Data;
 using CoreModels.Models;
 using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,19 +17,64 @@ namespace CoreServices.Services
         {
             _dbContext = dbContext;
         }
-        public async Task<ReservationDTO> Create(ReservationDTO reservation)
+
+        public async Task<ReservationDTO> Create(ReservationDTO reservation, int roomId, string userId)
         {
-            _dbContext.Entry(reservation).State = EntityState.Added;
+            //var userInfo = await _dbContext.Users
+            //   .Where(a => a.Id == userId)
+            //   .Select(e => new UserDTO
+            //   {
+            //       Id = e.Id,
+            //       Avatar = e.Avatar,
+            //       Email = e.Email,
+            //       FirstName = e.FirstName,
+            //       LastName = e.LastName,
+            //       UserName = e.UserName,
+            //       PhoneNumber = e.PhoneNumber,
+            //   }).FirstOrDefaultAsync();
+            var reservationInstance = new Reservation
+            {
+                Reason = reservation.Reason,
+                ReservationStartDate = reservation.ReservationStartDate,
+                ReservationEndDate = reservation.ReservationEndDate,
+                ReservationStatus = reservation.ReservationStatus,
+                UserId = userId,
+                RoomId = roomId
+
+            };
+            _dbContext.Entry(reservationInstance).State = EntityState.Added;
             await _dbContext.SaveChangesAsync();
             return reservation;
         }
 
-        public async Task Delete(int roomId, DateTime startTime)
+        public async Task<JSONRes<ReservationsDTO>> GetReservations()
         {
-            var reservation = _dbContext.Reservations
-                .Where(e => e.RoomId == roomId && e.ReservationStartDate == startTime);
-            _dbContext.Entry(reservation).State = EntityState.Deleted;
-            await _dbContext.SaveChangesAsync();
+            var reservations = await _dbContext.Reservations
+                .Select(e => new ReservationsDTO
+                {
+                    Reason = e.Reason,
+                    ReservationStartDate = e.ReservationStartDate,
+                    ReservationEndDate = e.ReservationEndDate,
+                    ReservationStatus = e.ReservationStatus,
+                    User = new UserDTO
+                    {
+                        Id = e.User.Id,
+                        Avatar = e.User.Avatar,
+                        Email = e.User.Email,
+                        FirstName = e.User.FirstName,
+                        LastName = e.User.LastName,
+                        UserName = e.User.UserName,
+                        PhoneNumber = e.User.PhoneNumber,
+                    },
+                }).ToListAsync();
+
+            var result = new JSONRes<ReservationsDTO>
+            {
+                Count = reservations.Count(),
+                Results = reservations,
+            };
+
+            return result;
         }
 
         public Task<ReservationDTO> GetReservation(int roomId, DateTime startTime)
@@ -63,36 +106,8 @@ namespace CoreServices.Services
                         UserName = e.User.UserName,
                     }
                 }).FirstOrDefaultAsync();
-                
+
             return reservation;
-        }
-
-        public async Task<JSONRes<ReservationsDTO>> GetReservations()
-        {
-            var reservations = await _dbContext.Reservations
-                .Select(e => new ReservationsDTO {
-                    Reason = e.Reason,
-                    ReservationStartDate = e.ReservationStartDate,
-                    ReservationEndDate = e.ReservationEndDate,
-                    ReservationStatus = e.ReservationStatus,
-                    User = new UserDTO {
-                        Id = e.User.Id,
-                        Avatar = e.User.Avatar,
-                        Email = e.User.Email,
-                        FirstName = e.User.FirstName,
-                        LastName = e.User.LastName,
-                        UserName = e.User.UserName,
-                        PhoneNumber = e.User.PhoneNumber,
-                    },
-                }).ToListAsync();
-
-            var result = new JSONRes<ReservationsDTO>
-            {
-                Count = reservations.Count(),
-                Results = reservations,
-            };
-
-            return result;
         }
 
         public async Task<JSONRes<ReservationsByUserDTO>> GetReservationsForUser(string userId)
@@ -116,16 +131,28 @@ namespace CoreServices.Services
             return result;
         }
 
-        public async Task<ReservationDTO> UpdateReservation(int roomId, DateTime startTime, ReservationDTO reservation)
+        public async Task<ReservationDTO> UpdateReservation(int roomId, string userId, DateTime startTime, ReservationDTO reservation)
         {
-            //var _reservation = await _dbContext.Reservations
-            //    .Where(e => e.RoomId == roomId && e.ReservationStartDate == startTime)
-            //    .FirstOrDefaultAsync();
-            
-            _dbContext.Entry(reservation).State = EntityState.Modified;
+            var updatedReservationInstance = new Reservation
+            {
+                RoomId = roomId,
+                UserId =userId,
+                Reason = reservation.Reason,
+                ReservationStartDate = reservation.ReservationStartDate,
+                ReservationEndDate = reservation.ReservationEndDate,
+                ReservationStatus = reservation.ReservationStatus,
+
+            };
+            _dbContext.Entry(updatedReservationInstance).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
             return reservation;
+        }
 
+        public async Task Delete(int roomId, DateTime startTime)
+        {
+            var reservation = await _dbContext.Reservations.Where(a => a.RoomId == roomId && a.ReservationStartDate == startTime).FirstOrDefaultAsync();
+            _dbContext.Entry(reservation).State = EntityState.Deleted;
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

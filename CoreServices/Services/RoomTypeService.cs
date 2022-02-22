@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CoreModels.Data;
+using CoreModels.Models;
 using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -19,19 +20,18 @@ namespace CoreServices.Services
             _dbContext = dbContext;
 
         }
+       
         public async Task<RoomTypesDTO> Create(RoomTypesDTO roomType)
         {
-            _dbContext.Entry(roomType).State = EntityState.Added;
+            var roomTypesInstance = new RoomType
+            {
+                Type = roomType.Type
+            };
+            _dbContext.Entry(roomTypesInstance).State = EntityState.Added;
             await _dbContext.SaveChangesAsync();
+            roomType.Id = roomTypesInstance.Id;
             return roomType;
 
-        }
-
-        public async Task Delete(int id)
-        {
-            var deleted = await _dbContext.RoomTypes.FindAsync(id);
-            _dbContext.Entry(deleted).State = EntityState.Deleted;
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<RoomTypeDTO> GetRoomsByType(int id)
@@ -76,9 +76,21 @@ namespace CoreServices.Services
 
         public async Task<RoomTypesDTO> UpdateRoomType(int id, RoomTypesDTO roomType)
         {
-            _dbContext.Entry(roomType).State = EntityState.Modified;
+            var UpdatedRoomTypesInstance = new RoomType
+            {
+                Id = id,
+                Type = roomType.Type
+            };
+            _dbContext.Entry(UpdatedRoomTypesInstance).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
             return roomType;
+        }
+
+        public async Task Delete(int id)
+        {
+            var deleted = await _dbContext.RoomTypes.FindAsync(id);
+            _dbContext.Entry(deleted).State = EntityState.Deleted;
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

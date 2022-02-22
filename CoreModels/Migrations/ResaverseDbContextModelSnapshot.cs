@@ -56,6 +56,12 @@ namespace CoreModels.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -351,7 +357,7 @@ namespace CoreModels.Migrations
             modelBuilder.Entity("CoreModels.Models.Reservation", b =>
                 {
                     b.HasOne("CoreModels.Models.Room", "Room")
-                        .WithMany()
+                        .WithMany("Reservations")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -468,6 +474,8 @@ namespace CoreModels.Migrations
 
             modelBuilder.Entity("CoreModels.Models.Room", b =>
                 {
+                    b.Navigation("Reservations");
+
                     b.Navigation("RoomAmenities");
                 });
 
