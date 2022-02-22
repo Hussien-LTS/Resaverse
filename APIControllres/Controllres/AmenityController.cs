@@ -1,5 +1,4 @@
-﻿using CoreModels.Models;
-using CoreServices.DTOs;
+﻿using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,22 +8,22 @@ namespace APIControllres.Controllres
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FloorController : ControllerBase
+    public class AmenityController : ControllerBase
     {
-        private readonly IFloor _floorService;
+        private readonly IAmenity _amenityService;
 
-        public FloorController(IFloor floor)
+        public AmenityController(IAmenity amenity)
         {
-            _floorService = floor;
+            _amenityService = amenity;
         }
-        
+
         [HttpPost]
-        public async Task<ActionResult<FloorDTO>> Create([FromBody] FloorDTO floor)
+        public async Task<ActionResult<AmenityDTO>> Create([FromBody] AmenityDTO amenity)
         {
             try
             {
-                var createdRecord = await _floorService.Create(floor);
-                return CreatedAtAction("GetFloor", new { floorId = floor.Id }, floor);
+                await _amenityService.Create(amenity);
+                return CreatedAtAction("GetAmenity", new { amenityId = amenity.Id }, amenity);
             }
             catch (Exception ex)
             {
@@ -32,13 +31,13 @@ namespace APIControllres.Controllres
             }
 
         }
-        
+
         [HttpGet]
-        public async Task<ActionResult<JSONRes<FloorsDTO>>> GetFloors()
+        public async Task<ActionResult<JSONRes<AmenitiesDTO>>> GetAmenites()
         {
             try
             {
-                var results = await _floorService.GetFloors();
+                var results = await _amenityService.GetAmenites();
                 return Ok(results);
             }
             catch (Exception ex)
@@ -48,12 +47,12 @@ namespace APIControllres.Controllres
 
         }
 
-        [HttpGet("{floorId}")]
-        public async Task<ActionResult<FloorDTO>> GetFloor([FromRoute] int floorId)
+        [HttpGet("{amenityId}")]
+        public async Task<ActionResult<AmenityDTO>> GetAmenity([FromRoute] int amenityId)
         {
             try
             {
-                var result = await _floorService.GetFloor(floorId);
+                var result = await _amenityService.GetAmenity(amenityId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -62,13 +61,12 @@ namespace APIControllres.Controllres
             }
         }
 
-
         [HttpPut("{id}")]
-        public async Task<ActionResult<FloorDTO>> UpdateFloor([FromRoute] int id, [FromBody] FloorDTO floor)
+        public async Task<ActionResult<AmenityDTO>> UpdateFloorAsync([FromRoute] int id, [FromBody] AmenityDTO amenity)
         {
             try
             {
-                var updatedRecord = await _floorService.UpdateFloor(id, floor);
+                var updatedRecord = await _amenityService.UpdateAmenity(id, amenity);
                 return Ok(updatedRecord);
             }
             catch (Exception ex)
@@ -83,7 +81,7 @@ namespace APIControllres.Controllres
         {
             try
             {
-                await _floorService.Delete(id);
+                await _amenityService.Delete(id);
                 return NoContent();
             }
             catch (Exception ex)

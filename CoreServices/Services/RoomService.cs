@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using CoreModels.Data;
+﻿using CoreModels.Data;
+using CoreModels.Models;
 using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,18 +16,53 @@ namespace CoreServices.Services
         {
             _dbContext = dbContext;
         }
+       
         public async Task<RoomDTO> Create(RoomDTO room)
         {
-            _dbContext.Entry(room).State = EntityState.Added;
+            var roomInstance = new Room
+            {  
+                
+                Canvas = room.Canvas,
+                Availability = room.Availability,
+                Capacity = room.Capacity,
+                Coordonation = room.Coordonation,
+                RoomCode = room.RoomCode
+            };
+            _dbContext.Entry(roomInstance).State = EntityState.Added;
             await _dbContext.SaveChangesAsync();
+            room.Id = roomInstance.Id;
             return room;
         }
 
-        public async Task Delete(int id)
+        public async Task<JSONRes<RoomsDTO>> GetRooms()
         {
-            var deletedRoom = await _dbContext.Rooms
-                                               .FindAsync(id);
-            _dbContext.Entry(deletedRoom).State = EntityState.Deleted;
+
+            var rooms = await _dbContext.Rooms.Select(a => new RoomsDTO
+            {
+                Id = a.Id,
+                Availability = a.Availability,
+                Canvas = a.Canvas,
+                Capacity = a.Capacity,
+                Coordonation = a.Coordonation,
+                RoomCode = a.RoomCode,
+                Amenities = a.RoomAmenities.Select(a => new AmenitiesDTO
+                {
+                    Id = a.AmenityId,
+                    AmenityName = a.Amenity.AmenityName
+                }).ToList(),
+                RoomType = new RoomTypesDTO
+                {
+                    Id = a.RoomType.Id,
+                    Type = a.RoomType.Type
+                }
+            }).ToListAsync();
+            var results = new JSONRes<RoomsDTO>
+            {
+                Count = rooms.Count(),
+                Results = rooms
+            };
+            return results;
+
 
         }
 
@@ -82,38 +116,6 @@ namespace CoreServices.Services
 
         }
 
-        public async Task<List<RoomsDTO>> GetRooms()
-        {
-
-            var rooms = await _dbContext.Rooms.Select(a => new RoomsDTO
-            {
-                Id = a.Id,
-                Availability = a.Availability,
-                Canvas = a.Canvas,
-                Capacity = a.Capacity,
-                Coordonation = a.Coordonation,
-                RoomCode = a.RoomCode,
-                Amenities = a.RoomAmenities.Select(a => new AmenitiesDTO
-                {
-                    Id = a.AmenityId,
-                    AmenityName = a.Amenity.AmenityName
-                }).ToList(),
-                RoomType = new RoomTypesDTO
-                {
-                    Id = a.RoomType.Id,
-                    Type = a.RoomType.Type
-                }
-            }).ToListAsync();
-            //var rooms = await _dbContext.Rooms
-            //                            .Include(rt => rt.RoomType)
-            //                            .Include(ra => ra.RoomAmenities).ThenInclude(a => a.Amenity)
-            //                            .ToListAsync();
-            //var results = _mapper.Map<RoomsDTO>(rooms);
-            return rooms;
-
-
-        }
-
         public async Task<RoomsByFloorDTO> GetRoomsByFloor(int floorID)
         {
             var rooms = await _dbContext.Rooms
@@ -147,7 +149,7 @@ namespace CoreServices.Services
                 FloorID = floorID,
                 Count = rooms.Count(),
                 FloorCode = floorCode.FloorCode,
-                Result =rooms
+                Result = rooms
             };
             //var rooms = await _dbContext.Rooms
             //                            .Include(rt => rt.RoomType)
@@ -157,11 +159,29 @@ namespace CoreServices.Services
             return roomsByFloor;
         }
 
-        public async Task<RoomDTO> UpdateRoom(int id, RoomDTO Room)
+        public async Task<RoomDTO> UpdateRoom(int id, RoomDTO room)
         {
-            _dbContext.Entry(Room).State = EntityState.Modified;
+            var updatedRoomInstance = new Room
+            {
+                Id = id,
+                Canvas = room.Canvas,
+                Availability = room.Availability,
+                Capacity = room.Capacity,
+                Coordonation = room.Coordonation,
+                RoomCode = room.RoomCode
+            };
+            _dbContext.Entry(updatedRoomInstance).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
-            return Room;
+            return room;
         }
+       
+        public async Task Delete(int id)
+        {
+            var deletedRoom = await _dbContext.Rooms.FindAsync(id);
+            _dbContext.Entry(deletedRoom).State = EntityState.Deleted;
+            await _dbContext.SaveChangesAsync();
+
+        }
+
     }
 }

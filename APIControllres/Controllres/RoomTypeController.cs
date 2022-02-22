@@ -9,22 +9,22 @@ namespace APIControllres.Controllres
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FloorController : ControllerBase
+    public class RoomTypeController : ControllerBase
     {
-        private readonly IFloor _floorService;
+        private readonly IRoomType _RoomTypeService;
 
-        public FloorController(IFloor floor)
+        public RoomTypeController(IRoomType roomType)
         {
-            _floorService = floor;
+            _RoomTypeService = roomType;
         }
-        
+
         [HttpPost]
-        public async Task<ActionResult<FloorDTO>> Create([FromBody] FloorDTO floor)
+        public async Task<ActionResult<RoomTypesDTO>> Create([FromBody] RoomTypesDTO roomType)
         {
             try
             {
-                var createdRecord = await _floorService.Create(floor);
-                return CreatedAtAction("GetFloor", new { floorId = floor.Id }, floor);
+                var createdRecord = await _RoomTypeService.Create(roomType);
+                return CreatedAtAction("GetRoomType", new { roomTypeId = roomType.Id }, roomType);
             }
             catch (Exception ex)
             {
@@ -32,13 +32,13 @@ namespace APIControllres.Controllres
             }
 
         }
-        
+ 
         [HttpGet]
-        public async Task<ActionResult<JSONRes<FloorsDTO>>> GetFloors()
+        public async Task<ActionResult<JSONRes<RoomTypesDTO>>> GetRoomTypes()
         {
             try
             {
-                var results = await _floorService.GetFloors();
+                var results = await _RoomTypeService.GetRoomTypes();
                 return Ok(results);
             }
             catch (Exception ex)
@@ -48,12 +48,12 @@ namespace APIControllres.Controllres
 
         }
 
-        [HttpGet("{floorId}")]
-        public async Task<ActionResult<FloorDTO>> GetFloor([FromRoute] int floorId)
+        [HttpGet("{roomTypeId}")]
+        public async Task<ActionResult<RoomTypeDTO>> GetRoomType([FromRoute] int roomTypeId)
         {
             try
             {
-                var result = await _floorService.GetFloor(floorId);
+                var result = await _RoomTypeService.GetRoomsByType(roomTypeId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -62,13 +62,12 @@ namespace APIControllres.Controllres
             }
         }
 
-
         [HttpPut("{id}")]
-        public async Task<ActionResult<FloorDTO>> UpdateFloor([FromRoute] int id, [FromBody] FloorDTO floor)
+        public async Task<ActionResult<RoomTypesDTO>> UpdateRoomTypeAsync([FromRoute] int id, [FromBody] RoomTypesDTO roomType)
         {
             try
             {
-                var updatedRecord = await _floorService.UpdateFloor(id, floor);
+                var updatedRecord = await _RoomTypeService.UpdateRoomType(id, roomType);
                 return Ok(updatedRecord);
             }
             catch (Exception ex)
@@ -83,7 +82,7 @@ namespace APIControllres.Controllres
         {
             try
             {
-                await _floorService.Delete(id);
+                await _RoomTypeService.Delete(id);
                 return NoContent();
             }
             catch (Exception ex)

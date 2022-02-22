@@ -19,21 +19,41 @@ namespace CoreServices.Services
         {
             _dbContext = dbContext;
         }
+       
         public async Task<FloorDTO> Create(FloorDTO floor)
         {
-            _dbContext.Entry(floor).State = EntityState.Added;
+            var floorInstance = new Floor
+            {
+
+                Canvas = floor.Canvas,
+                Coordination = floor.Coordination,
+                FloorCode = floor.FloorCode
+
+            };
+            _dbContext.Entry(floorInstance).State = EntityState.Added;
 
             await _dbContext.SaveChangesAsync();
+            floor.Id = floorInstance.Id;
+          
 
             return floor;
         }
 
-        public async Task Delete(int id)
+        public async Task<JSONRes<FloorsDTO>> GetFloors()
         {
-            Floor deletedFloor = await _dbContext.Floors
-                                                 .FindAsync(id);
-            _dbContext.Entry(deletedFloor).State = EntityState.Deleted;
-            await _dbContext.SaveChangesAsync();
+            var floors = await _dbContext.Floors
+                .Select(a => new FloorsDTO
+                {
+                    Id = a.Id,
+                    FloorCode = a.FloorCode
+                }).ToListAsync();
+            var results = new JSONRes<FloorsDTO>
+            {
+                Count = floors.Count(),
+                Results = floors
+            };
+
+            return results;
         }
 
         public async Task<FloorDTO> GetFloor(int id)
@@ -61,28 +81,26 @@ namespace CoreServices.Services
             return floor;
         }
 
-        public async Task<JSONRes<FloorsDTO>> GetFloors()
+        public async Task<FloorDTO> UpdateFloor(int id, FloorDTO floor)
         {
-            var floors = await _dbContext.Floors
-                .Select(a => new FloorsDTO
-                {
-                    Id = a.Id,
-                    FloorCode = a.FloorCode
-                }).ToListAsync();
-            var results = new JSONRes<FloorsDTO>
+            var updatedFloorInstance = new Floor
             {
-                Count = floors.Count(),
-                Results = floors
+                Id = id,
+                Canvas = floor.Canvas,
+                Coordination = floor.Coordination,
+                FloorCode = floor.FloorCode,
             };
-
-            return results;
-        }
-
-        public async Task<FloorDTO> UpdateFloorAsync(int id, FloorDTO floor)
-        {
-            _dbContext.Entry(floor).State = EntityState.Modified;
+            _dbContext.Entry(updatedFloorInstance).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
             return floor;
+        }
+
+        public async Task Delete(int id)
+        {
+            Floor deletedFloor = await _dbContext.Floors
+                                                 .FindAsync(id);
+            _dbContext.Entry(deletedFloor).State = EntityState.Deleted;
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
