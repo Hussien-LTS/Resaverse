@@ -11,12 +11,11 @@ namespace APIControllres.Controllres
     public class AmenityController : ControllerBase
     {
         private readonly IAmenity _amenityService;
-
         public AmenityController(IAmenity amenity)
         {
             _amenityService = amenity;
         }
-
+        //*************************************************************************************** Create
         [HttpPost]
         public async Task<ActionResult<AmenityDTO>> Create([FromBody] AmenityDTO amenity)
         {
@@ -29,9 +28,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex); ;
             }
-
         }
-
+        //*************************************************************************************** GetAmenites
         [HttpGet]
         public async Task<ActionResult<JSONRes<AmenitiesDTO>>> GetAmenites()
         {
@@ -44,9 +42,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
+        //*************************************************************************************** GetAmenity
         [HttpGet("{amenityId}")]
         public async Task<ActionResult<AmenityDTO>> GetAmenity([FromRoute] int amenityId)
         {
@@ -60,7 +57,7 @@ namespace APIControllres.Controllres
                 return StatusCode(500, ex);
             }
         }
-
+        //*************************************************************************************** UpdateFloorAsync
         [HttpPut("{id}")]
         public async Task<ActionResult<AmenityDTO>> UpdateFloorAsync([FromRoute] int id, [FromBody] AmenityDTO amenity)
         {
@@ -73,9 +70,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
+        //*************************************************************************************** Delete
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
@@ -88,8 +84,6 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
     }
 }

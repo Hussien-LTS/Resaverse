@@ -21,16 +21,14 @@ namespace CoreServices
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddTransient<IAmenity, AmenityService>();
             services.AddTransient<IFloor, FloorService>();
             services.AddTransient<IReservation, ReservationService>();
             services.AddTransient<IRoom, RoomService>();
             services.AddTransient<IRoomAmenity, RoomAmenityService>();
             services.AddTransient<IRoomType, RoomTypeService>();
-
+            services.AddTransient<IAccount, AccountService>();
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -38,9 +36,7 @@ namespace CoreServices
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>

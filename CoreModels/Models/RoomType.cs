@@ -9,7 +9,6 @@ namespace CoreModels.Models
     {
         public int Id { get; set; }
         public string Type { get; set; }
-
         public virtual List<Room> Rooms { get; set; }
     }
 }

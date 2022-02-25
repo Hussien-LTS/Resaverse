@@ -12,12 +12,11 @@ namespace CoreServices.Services
     public class ReservationService : IReservation
     {
         private readonly ResaverseDbContext _dbContext;
-
         public ReservationService(ResaverseDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-
+        //********************************************************************************************************************************** Create
         public async Task<ReservationDTO> Create(ReservationDTO reservation, int roomId, string userId)
         {
             //var userInfo = await _dbContext.Users
@@ -40,13 +39,12 @@ namespace CoreServices.Services
                 ReservationStatus = reservation.ReservationStatus,
                 UserId = userId,
                 RoomId = roomId
-
             };
             _dbContext.Entry(reservationInstance).State = EntityState.Added;
             await _dbContext.SaveChangesAsync();
             return reservation;
         }
-
+        //********************************************************************************************************************************** GetReservations
         public async Task<JSONRes<ReservationsDTO>> GetReservations()
         {
             var reservations = await _dbContext.Reservations
@@ -73,10 +71,9 @@ namespace CoreServices.Services
                 Count = reservations.Count(),
                 Results = reservations,
             };
-
             return result;
         }
-
+        //********************************************************************************************************************************** GetReservation
         public Task<ReservationDTO> GetReservation(int roomId, DateTime startTime)
         {
             var reservation = _dbContext.Reservations
@@ -106,10 +103,9 @@ namespace CoreServices.Services
                         UserName = e.User.UserName,
                     }
                 }).FirstOrDefaultAsync();
-
             return reservation;
         }
-
+        //********************************************************************************************************************************** GetReservationsForUser
         public async Task<JSONRes<ReservationsByUserDTO>> GetReservationsForUser(string userId)
         {
             var reservations = await _dbContext.Reservations
@@ -121,22 +117,20 @@ namespace CoreServices.Services
                     ReservationEndDate = e.ReservationEndDate,
                     ReservationStatus = e.ReservationStatus,
                 }).ToListAsync();
-
             var result = new JSONRes<ReservationsByUserDTO>
             {
                 Count = reservations.Count(),
                 Results = reservations,
             };
-
             return result;
         }
-
+        //********************************************************************************************************************************** UpdateReservation
         public async Task<ReservationDTO> UpdateReservation(int roomId, string userId, DateTime startTime, ReservationDTO reservation)
         {
             var updatedReservationInstance = new Reservation
             {
                 RoomId = roomId,
-                UserId =userId,
+                UserId = userId,
                 Reason = reservation.Reason,
                 ReservationStartDate = reservation.ReservationStartDate,
                 ReservationEndDate = reservation.ReservationEndDate,
@@ -147,7 +141,7 @@ namespace CoreServices.Services
             await _dbContext.SaveChangesAsync();
             return reservation;
         }
-
+        //********************************************************************************************************************************** Delete
         public async Task Delete(int roomId, DateTime startTime)
         {
             var reservation = await _dbContext.Reservations.Where(a => a.RoomId == roomId && a.ReservationStartDate == startTime).FirstOrDefaultAsync();

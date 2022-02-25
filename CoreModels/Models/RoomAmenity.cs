@@ -9,7 +9,6 @@ namespace CoreModels.Models
     {
         public int RoomId { get; set; }
         public int AmenityId { get; set; }
-
         public virtual Room Room { get; set; }
         public virtual Amenity Amenity { get; set; }
     }

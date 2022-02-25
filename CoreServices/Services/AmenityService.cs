@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using CoreModels.Data;
+﻿using CoreModels.Data;
 using CoreModels.Models;
 using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,13 +11,11 @@ namespace CoreServices.Services
     public class AmenityService : IAmenity
     {
         private readonly ResaverseDbContext _dbContext;
-
         public AmenityService(ResaverseDbContext dbContext)
         {
             _dbContext = dbContext;
-
         }
-
+        //**************************************************************************** Create
         public async Task<AmenityDTO> Create(AmenityDTO amenity)
         {
             var amenityInstance = new Amenity
@@ -34,10 +29,11 @@ namespace CoreServices.Services
 
             return amenity;
         }
-
+        //**************************************************************************** GetAmenites
         public async Task<JSONRes<AmenitiesDTO>> GetAmenites()
         {
-            var list = await _dbContext.Amenities.Select(e => new AmenitiesDTO {
+            var list = await _dbContext.Amenities.Select(e => new AmenitiesDTO
+            {
                 Id = e.Id,
                 AmenityName = e.AmenityName,
             }).ToListAsync();
@@ -49,7 +45,7 @@ namespace CoreServices.Services
             };
             return ameniteis;
         }
-
+        //**************************************************************************** GetAmenity
         public async Task<AmenityDTO> GetAmenity(int id)
         {
             var amenity = await _dbContext.Amenities
@@ -71,7 +67,7 @@ namespace CoreServices.Services
 
             return amenity;
         }
-
+        //**************************************************************************** UpdateAmenity
         public async Task<AmenityDTO> UpdateAmenity(int id, AmenityDTO amenity)
         {
             var updatedAmenityInstance = new Amenity
@@ -85,6 +81,7 @@ namespace CoreServices.Services
 
             return amenity;
         }
+        //**************************************************************************** Delete
         public async Task Delete(int id)
         {
             var deletedAmenity = await _dbContext.Amenities.FindAsync(id);

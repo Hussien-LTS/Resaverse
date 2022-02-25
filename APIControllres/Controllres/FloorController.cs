@@ -1,5 +1,4 @@
-﻿using CoreModels.Models;
-using CoreServices.DTOs;
+﻿using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,12 +11,11 @@ namespace APIControllres.Controllres
     public class FloorController : ControllerBase
     {
         private readonly IFloor _floorService;
-
         public FloorController(IFloor floor)
         {
             _floorService = floor;
         }
-        
+        //************************************************************************************************************ Create
         [HttpPost]
         public async Task<ActionResult<FloorDTO>> Create([FromBody] FloorDTO floor)
         {
@@ -30,9 +28,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex); ;
             }
-
         }
-        
+        //************************************************************************************************************ GetFloors
         [HttpGet]
         public async Task<ActionResult<JSONRes<FloorsDTO>>> GetFloors()
         {
@@ -45,9 +42,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
+        //************************************************************************************************************ GetFloor
         [HttpGet("{floorId}")]
         public async Task<ActionResult<FloorDTO>> GetFloor([FromRoute] int floorId)
         {
@@ -61,8 +57,7 @@ namespace APIControllres.Controllres
                 return StatusCode(500, ex);
             }
         }
-
-
+        //************************************************************************************************************ UpdateFloor
         [HttpPut("{id}")]
         public async Task<ActionResult<FloorDTO>> UpdateFloor([FromRoute] int id, [FromBody] FloorDTO floor)
         {
@@ -75,9 +70,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
+        //************************************************************************************************************ Delete
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
@@ -90,8 +84,6 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
     }
 }

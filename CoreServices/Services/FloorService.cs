@@ -1,44 +1,36 @@
-﻿using AutoMapper;
-using CoreModels.Data;
+﻿using CoreModels.Data;
 using CoreModels.Models;
 using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreServices.Services
 {
-
     public class FloorService : IFloor
     {
         private readonly ResaverseDbContext _dbContext;
-
         public FloorService(ResaverseDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-       
+        //**************************************************************************** Create
         public async Task<FloorDTO> Create(FloorDTO floor)
         {
             var floorInstance = new Floor
             {
-
                 Canvas = floor.Canvas,
                 Coordination = floor.Coordination,
                 FloorCode = floor.FloorCode
-
             };
             _dbContext.Entry(floorInstance).State = EntityState.Added;
 
             await _dbContext.SaveChangesAsync();
             floor.Id = floorInstance.Id;
-          
-
             return floor;
         }
-
+        //**************************************************************************** GetFloors
         public async Task<JSONRes<FloorsDTO>> GetFloors()
         {
             var floors = await _dbContext.Floors
@@ -52,35 +44,32 @@ namespace CoreServices.Services
                 Count = floors.Count(),
                 Results = floors
             };
-
             return results;
         }
-
+        //**************************************************************************** GetFloor
         public async Task<FloorDTO> GetFloor(int id)
         {
             var floor = await _dbContext.Floors
                 .Where(e => e.Id == id)
                 .Select(f => new FloorDTO
-            {
-                Id = f.Id,
-                Canvas = f.Canvas,
-                Coordination = f.Coordination,
-                FloorCode = f.FloorCode,
-                Rooms = f.Rooms
-                    .Select(r => new FloorsRoomsDTO
                 {
-                    Id = r.Id,
-                    Availability = r.Availability,
-                    Canvas = r.Canvas,
-                    Coordonation = r.Coordonation
+                    Id = f.Id,
+                    Canvas = f.Canvas,
+                    Coordination = f.Coordination,
+                    FloorCode = f.FloorCode,
+                    Rooms = f.Rooms
+                    .Select(r => new FloorsRoomsDTO
+                    {
+                        Id = r.Id,
+                        Availability = r.Availability,
+                        Canvas = r.Canvas,
+                        Coordonation = r.Coordonation
 
-                }).ToList()
-            }).FirstOrDefaultAsync();
-
-
+                    }).ToList()
+                }).FirstOrDefaultAsync();
             return floor;
         }
-
+        //**************************************************************************** 
         public async Task<FloorDTO> UpdateFloor(int id, FloorDTO floor)
         {
             var updatedFloorInstance = new Floor
@@ -94,7 +83,7 @@ namespace CoreServices.Services
             await _dbContext.SaveChangesAsync();
             return floor;
         }
-
+        //**************************************************************************** Delete
         public async Task Delete(int id)
         {
             Floor deletedFloor = await _dbContext.Floors
