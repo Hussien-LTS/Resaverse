@@ -10,6 +10,5 @@ namespace CoreServices.Interfaces
         Task<AmenityDTO> GetAmenity(int id);
         Task<AmenityDTO> UpdateAmenity(int id, AmenityDTO amenity);
         Task Delete(int id);
-
     }
 }

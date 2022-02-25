@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using CoreModels.Data;
+﻿using CoreModels.Data;
 using CoreModels.Models;
 using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,13 +11,11 @@ namespace CoreServices.Services
     public class RoomTypeService : IRoomType
     {
         private readonly ResaverseDbContext _dbContext;
-
         public RoomTypeService(ResaverseDbContext dbContext)
         {
             _dbContext = dbContext;
-
         }
-       
+        //********************************************************************************* Create
         public async Task<RoomTypesDTO> Create(RoomTypesDTO roomType)
         {
             var roomTypesInstance = new RoomType
@@ -31,14 +26,14 @@ namespace CoreServices.Services
             await _dbContext.SaveChangesAsync();
             roomType.Id = roomTypesInstance.Id;
             return roomType;
-
         }
-
+        //********************************************************************************* GetRoomsByType
         public async Task<RoomTypeDTO> GetRoomsByType(int id)
         {
             var roomTypes = await _dbContext.RoomTypes
                 .Where(e => e.Id == id)
-                .Select(e => new RoomTypeDTO {
+                .Select(e => new RoomTypeDTO
+                {
                     Id = e.Id,
                     Type = e.Type,
                     Rooms = e.Rooms.Select(e => new AminitiesRoomsDTO
@@ -51,11 +46,11 @@ namespace CoreServices.Services
                     }).ToList()
                 })
                 .FirstOrDefaultAsync();
-            
+
 
             return roomTypes;
         }
-
+        //********************************************************************************* GetRoomTypes
         public async Task<JSONRes<RoomTypesDTO>> GetRoomTypes()
         {
             var roomTypes = await _dbContext.RoomTypes
@@ -73,7 +68,7 @@ namespace CoreServices.Services
 
             return result;
         }
-
+        //********************************************************************************* UpdateRoomType
         public async Task<RoomTypesDTO> UpdateRoomType(int id, RoomTypesDTO roomType)
         {
             var UpdatedRoomTypesInstance = new RoomType
@@ -85,7 +80,7 @@ namespace CoreServices.Services
             await _dbContext.SaveChangesAsync();
             return roomType;
         }
-
+        //********************************************************************************* Delete
         public async Task Delete(int id)
         {
             var deleted = await _dbContext.RoomTypes.FindAsync(id);

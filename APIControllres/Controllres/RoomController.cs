@@ -1,6 +1,6 @@
-﻿using CoreModels.Models;
-using CoreServices.DTOs;
+﻿using CoreServices.DTOs;
 using CoreServices.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -9,15 +9,15 @@ namespace APIControllres.Controllres
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RoomController : ControllerBase
     {
         private readonly IRoom _RoomService;
-
         public RoomController(IRoom room)
         {
             _RoomService = room;
         }
-       
+        //****************************************************************************************************** Create
         [HttpPost]
         public async Task<ActionResult<RoomDTO>> Create([FromBody] RoomDTO room)
         {
@@ -30,9 +30,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex); ;
             }
-
         }
-
+        //****************************************************************************************************** GetRooms
         [HttpGet]
         public async Task<ActionResult<JSONRes<RoomsDTO>>> GetRooms()
         {
@@ -45,9 +44,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
+        //****************************************************************************************************** GetRoom
         [HttpGet("{roomId}")]
         public async Task<ActionResult<RoomDTO>> GetRoom([FromRoute] int roomId)
         {
@@ -61,7 +59,7 @@ namespace APIControllres.Controllres
                 return StatusCode(500, ex);
             }
         }
-
+        //****************************************************************************************************** GetRoomsByFloor
         [HttpGet]
         [Route("RoomsByFloor/{floorId}")]
         public async Task<ActionResult<RoomDTO>> GetRoomsByFloor([FromRoute] int floorId)
@@ -76,7 +74,7 @@ namespace APIControllres.Controllres
                 return StatusCode(500, ex);
             }
         }
-
+        //****************************************************************************************************** UpdateRoom
         [HttpPut("{id}")]
         public async Task<ActionResult<RoomDTO>> UpdateRoom([FromRoute] int id, [FromBody] RoomDTO room)
         {
@@ -89,9 +87,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
+        //****************************************************************************************************** Delete
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
@@ -104,8 +101,6 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
     }
 }

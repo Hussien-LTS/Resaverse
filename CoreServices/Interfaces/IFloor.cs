@@ -1,5 +1,4 @@
 ﻿using CoreServices.DTOs;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CoreServices.Interfaces

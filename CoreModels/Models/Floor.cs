@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CoreModels.Models
 {
@@ -11,12 +7,9 @@ namespace CoreModels.Models
         public int Id { get; set; }
         public string FloorCode { get; set; }
         public string Coordination { get; set; }
-
-        #nullable enable
+#nullable enable
         public string? Canvas { get; set; }
-
-        #nullable disable
+#nullable disable
         public virtual List<Room> Rooms { get; set; }
-
     }
 }

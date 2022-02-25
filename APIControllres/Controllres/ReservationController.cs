@@ -11,12 +11,11 @@ namespace APIControllres.Controllres
     public class ReservationController : ControllerBase
     {
         private readonly IReservation _reservationService;
-
         public ReservationController(IReservation reservation)
         {
             _reservationService = reservation;
         }
-
+        //******************************************************************************************************************************* Create
         [HttpPost]
         [Route("{userId}/reserve/{roomId}")]
         public async Task<ActionResult<ReservationDTO>> Create([FromBody] ReservationDTO reservation, int roomId, string userId)
@@ -30,9 +29,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex); ;
             }
-
         }
-
+        //******************************************************************************************************************************* GetReservations
         [HttpGet]
         public async Task<ActionResult<JSONRes<ReservationsDTO>>> GetReservations()
         {
@@ -45,9 +43,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
+        //******************************************************************************************************************************* GetReservation
         [HttpPost]
         [Route("room/{roomId}")]
         public async Task<ActionResult<ReservationDTO>> GetReservation([FromRoute] int roomId, [FromBody] DateTime startTime)
@@ -62,7 +59,7 @@ namespace APIControllres.Controllres
                 return StatusCode(500, ex);
             }
         }
-
+        //******************************************************************************************************************************* GetReservationsForUser
         [HttpGet]
         [Route("user/{userId}")]
         public async Task<ActionResult<JSONRes<ReservationsByUserDTO>>> GetReservationsForUser([FromRoute] string userId)
@@ -76,9 +73,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
+        //******************************************************************************************************************************* UpdateReservation
         [HttpPut]
         [Route("update/{userId}/reserve/{roomId}/{startTime}")]
         public async Task<ActionResult<ReservationDTO>> UpdateReservation(int roomId, string userId, DateTime startTime, ReservationDTO reservation)
@@ -92,9 +88,8 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
+        //******************************************************************************************************************************* Delete 
         [HttpDelete("{roomId}")]
         public async Task<IActionResult> Delete([FromRoute] int roomId, [FromBody] DateTime startTime)
         {
@@ -107,8 +102,6 @@ namespace APIControllres.Controllres
             {
                 return StatusCode(500, ex);
             }
-
         }
-
     }
 }
