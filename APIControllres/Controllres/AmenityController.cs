@@ -21,7 +21,9 @@ namespace APIControllres.Controllres
         {
             try
             {
-                await _amenityService.Create(amenity);
+                var result = await _amenityService.Create(amenity, this.ModelState);
+                if (!ModelState.IsValid) return BadRequest(ModelState["Error"].Errors);
+
                 return CreatedAtAction("GetAmenity", new { amenityId = amenity.Id }, amenity);
             }
             catch (Exception ex)
