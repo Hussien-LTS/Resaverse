@@ -1,7 +1,9 @@
 ﻿using CoreModels.Data;
 using CoreModels.Models;
+using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -35,7 +37,7 @@ namespace CoreServices.Services
             _dbContext = dbContext;
         }
         //*************************************************************************************** Register
-        public async Task<IdentityResult> Register(RegisterModel registerModel)
+        public async Task<UserDTO> Register(RegisterModel registerModel, ModelStateDictionary modelState)
         {
             //if (registerModel == null) return BadRequest("Model Null");
             //if (!ModelState.IsValid) return BadRequest("Not Valid");
@@ -50,7 +52,31 @@ namespace CoreServices.Services
                 Email = registerModel.Email,
                 UserName = registerModel.Email
             };
-            return await _userManager.CreateAsync(user, registerModel.Password);
+            var result = await _userManager.CreateAsync(user, registerModel.Password);
+
+            if (result.Succeeded)
+            {
+                return new UserDTO()
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Avatar = user.Avatar,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhoneNumber = user.PhoneNumber,
+                    UserName = user.Email
+                    
+                };
+            }
+
+            foreach (var error in result.Errors)
+            {
+                var errorKey = error.Code.Contains("Password") ? nameof(registerModel.Password) :
+                    error.Code.Contains("Email") ? nameof(registerModel.Email) :
+                    "";
+                modelState.AddModelError(errorKey, error.Description);
+            }
+            return null;
         }
         //*************************************************************************************** Login
         public async Task<string> LogIn(LogInModel signInModel)

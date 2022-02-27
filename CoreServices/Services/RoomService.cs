@@ -102,7 +102,7 @@ namespace CoreServices.Services
                             Id = e.User.Id,
                             LastName = e.User.LastName,
                             PhoneNumber = e.User.PhoneNumber,
-                            UserName = e.User.UserName,
+                            UserName = e.User.Email
                         }
                     }).ToList()
                 }).FirstOrDefaultAsync();
