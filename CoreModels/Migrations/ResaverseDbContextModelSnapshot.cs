@@ -27,9 +27,13 @@ namespace CoreModels.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AmenityName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AmenityName")
+                        .IsUnique()
+                        .HasFilter("[AmenityName] IS NOT NULL");
 
                     b.ToTable("Amenities");
                 });

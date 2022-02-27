@@ -19,6 +19,9 @@ namespace CoreModels.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder
                 .Entity<Amenity>()
+                .HasIndex(sad => sad.AmenityName).IsUnique();
+            modelBuilder
+                .Entity<Amenity>()
                 .HasMany(a => a.RoomAmenities)
                 .WithOne(am => am.Amenity)
                 .HasForeignKey(a => a.AmenityId)
