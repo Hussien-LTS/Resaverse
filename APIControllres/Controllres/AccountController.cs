@@ -1,4 +1,5 @@
 ﻿using CoreModels.Models;
+using CoreServices.DTOs;
 using CoreServices.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,18 +18,19 @@ namespace APIControllres.Controllres
         }
         //*************************************************************************************** Register
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel registerModel)
+        public async Task<ActionResult<UserDTO>> Register([FromBody] RegisterModel registerModel)
         {
             try
             {
                 if (registerModel == null) return BadRequest("Model Null");
-                if (!ModelState.IsValid) return BadRequest("Not Valid");
-                var result = await _applicationUser.Register(registerModel);
-                if (!result.Succeeded)
+                //if (!ModelState.IsValid) return BadRequest("Not Valid");
+                var result = await _applicationUser.Register(registerModel, this.ModelState);
+                if (ModelState.IsValid)
                 {
-                    return Unauthorized();
+                    return result;
                 }
-                return Ok(result.Succeeded);
+                return BadRequest(new ValidationProblemDetails(ModelState));
+
             }
             catch (Exception ex)
             {

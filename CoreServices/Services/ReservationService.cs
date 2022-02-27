@@ -61,8 +61,8 @@ namespace CoreServices.Services
                         Email = e.User.Email,
                         FirstName = e.User.FirstName,
                         LastName = e.User.LastName,
-                        UserName = e.User.UserName,
                         PhoneNumber = e.User.PhoneNumber,
+                        UserName = e.User.Email
                     },
                 }).ToListAsync();
 
@@ -100,7 +100,7 @@ namespace CoreServices.Services
                         Id = e.User.Id,
                         LastName = e.User.LastName,
                         PhoneNumber = e.User.PhoneNumber,
-                        UserName = e.User.UserName,
+                        UserName = e.User.Email,
                     }
                 }).FirstOrDefaultAsync();
             return reservation;
