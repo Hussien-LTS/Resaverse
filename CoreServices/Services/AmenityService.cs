@@ -2,7 +2,9 @@
 using CoreModels.Models;
 using CoreServices.DTOs;
 using CoreServices.Interfaces;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,18 +18,27 @@ namespace CoreServices.Services
             _dbContext = dbContext;
         }
         //**************************************************************************** Create
-        public async Task<AmenityDTO> Create(AmenityDTO amenity)
+        public async Task<AmenityDTO> Create(AmenityDTO amenity, ModelStateDictionary modelState)
         {
             var amenityInstance = new Amenity
             {
                 AmenityName = amenity.AmenityName
             };
-            _dbContext.Entry(amenityInstance).State = EntityState.Added;
 
-            await _dbContext.SaveChangesAsync();
-            amenity.Id = amenityInstance.Id;
+            try
+            {
+                _dbContext.Entry(amenityInstance).State = EntityState.Added;
+                await _dbContext.SaveChangesAsync();
+                amenity.Id = amenityInstance.Id;
 
-            return amenity;
+                return amenity;
+            }
+            catch (Exception e)
+            {
+
+                modelState.AddModelError("ERROR", e.InnerException.Message);
+            }
+            return null;
         }
         //**************************************************************************** GetAmenites
         public async Task<JSONRes<AmenitiesDTO>> GetAmenites()
