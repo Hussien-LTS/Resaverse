@@ -1,0 +1,16 @@
+{
+  "Id": 1,
+  "FloorCode": "F3",
+  "Coordination": "(20,50),()....",
+  "Canvas": "1000x800",
+  "Rooms": [
+    {
+      "Id": 1,
+      "Availability": true,
+      "Coordonation": "Json btw",
+      "Canvas": "Json btw"
+    },
+    {},
+    {}
+  ]
+}

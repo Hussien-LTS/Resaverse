@@ -1,0 +1,110 @@
+@startuml Staff Reservations
+actor Staff as Staff
+participant Web_App as Web_App
+database Database as DB
+participant web_App as web_App
+actor Coordinator as Coordinator
+
+
+Staff -> Web_App: Visit the home page
+
+Web_App -> DB: Query all rooms
+
+DB --> Web_App: Return all saved rooms
+Web_App --> Staff: Show all rooms
+note left
+Show reserved and empty
+rooms in diffrent colors
+end note
+
+
+Staff -> Web_App: Click on a specific room
+Web_App -> DB: Query a specific room's details
+
+DB --> Web_App: Return specific room's details
+Web_App --> Staff: Show room's details
+Staff -> Web_App: Click on reserve
+note left
+New reservation
+end note
+Web_App -> DB: Insert new reservation with\n PINDING state
+
+DB --> web_App: Return  reservation
+web_App --> Coordinator: Send an Email
+
+Coordinator -> web_App: Take an action
+note right
+Approve or Reject
+end note
+
+web_App -> DB: Change the reservation\n state
+
+DB --> Web_App: Last update on the\n reservation state
+Web_App --> Staff: Notify the user "staff"\n with the new state
+note left
+By changing some colors
+or by Email
+end note
+
+Staff -> Web_App: Click on update\n a reservation
+note left
+Update a reservation
+end note
+Web_App -> DB: Update the reservation with\n the new info and change\n the state to PINDING
+
+DB --> web_App: Return  reservation
+web_App --> Coordinator: Send an Email
+
+Coordinator -> web_App: Take an action
+note right
+Approve or Reject
+end note
+
+web_App -> DB: Change the reservation\n state
+
+DB --> Web_App: Return last update on\n the reservation
+Web_App --> Staff: Notify the user "staff"\n with the new state
+
+
+Staff -> Web_App: Click on delete a reservation
+Web_App -> DB: Update the reservation state\n to "ENDED" and change\n the ended time to the\n request time
+
+DB --> Web_App: Return last updates
+Web_App --> Staff: Notify the user "staff"\n with the new state
+note left
+By changing some colors
+or by Email
+end note
+
+Staff -> Staff: Check the expired time\n behinde the scene
+Staff -> Web_App: Expired reservation
+
+Web_App -> DB: Update the state of \nreservation to "EXPIRED"
+DB --> Web_App: Return last updates
+
+Web_App --> Staff: Notify the user "staff"\n with the new state
+note left
+By changing some colors
+or by Email
+end note
+
+
+Coordinator -> web_App: Click on update a\n reservation
+web_App -> DB: Update the reservation with\n the new info
+
+DB --> Web_App: Return the new reservation info
+Web_App --> Staff: Notify the user "staff"\n with the new info
+note left
+By Email for now
+end note
+
+
+Coordinator -> web_App: Click on delete a\n reservation
+web_App -> DB: Update the reservation state\n to "ENDED" and change\n the ended time to the\n request time
+
+DB --> Web_App: Return last updates
+Web_App --> Staff: Notify the user "staff"\n with the new info
+note left
+By Email for now
+end note
+@enduml

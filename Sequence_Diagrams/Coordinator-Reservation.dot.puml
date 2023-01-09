@@ -1,0 +1,56 @@
+@startuml Coordinator Reservations
+
+actor Coordinator as Coordinator
+participant Web_App as Web_App
+database Database as DB
+
+Coordinator -> Web_App: Visit the home page
+Web_App -> DB: Query all rooms
+
+DB --> Web_App: Return all saved rooms
+Web_App --> Coordinator: Show all rooms
+
+
+Coordinator -> Web_App: Click on specific room
+Web_App -> DB: Query a specific room's details
+
+DB --> Web_App: Return a specific room's details
+Web_App --> Coordinator: Show room's details
+
+
+Coordinator -> Web_App: Click on reserve
+note left
+New reservation
+end note
+Web_App -> DB: Insert new reservation with\n ACCEPTED state
+
+DB --> Web_App: Return  reservation
+
+Web_App --> Coordinator: Notify the user "Coordinator"\n with the new state
+note left
+By changing some colors
+or by Email
+end note
+
+
+Coordinator -> Web_App: Click on update\n a reservation
+note left
+Update a reservation
+end note
+Web_App -> DB: Update the reservation with\n the new info
+
+DB --> Web_App: Return  reservation
+Web_App --> Coordinator: Notify the user "Coordinator"\n with the new state
+
+
+Coordinator -> Web_App: Click on delete a reservation
+Web_App -> DB: Update the reservation state\n to "ENDED" and change\n the ended time to the\n request time
+
+DB --> Web_App: Return last updates
+Web_App --> Coordinator: Notify the user "staff"\n with the new state
+note left
+By changing some colors
+or by Email
+end note
+
+@endpuml

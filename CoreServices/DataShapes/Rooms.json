@@ -1,0 +1,33 @@
+{
+  //Using Floor ID
+  "FloorID": 1,
+  "FloorCode": "F3",
+  "count": 3,
+  "result": [
+    {
+      "Id": 1,
+      "RoomCode": "08",
+      "Availability": true,
+      "Capacity": 30,
+      "Coordonation": "30x90",
+      "Canvas": "30x90",
+      "RoomType": {
+        "Id": 1,
+        "Type": "ClassRoom"
+      },
+      "Amenities": [
+        {
+          "Id": 1,
+          "Name": "Tv"
+        },
+        {
+          "Id": 2,
+          "Name": "3D Printer"
+        }
+      ]
+    },
+    {},
+    {}
+  ]
+}
+
